@@ -1,0 +1,47 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Create New Listing</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" name="title" class="form-control" id="title" placeholder="Title...">
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <input type="text" name="description" class="form-control" id="description" placeholder="Description...">
+        </div>
+
+        <div class="mb-3">
+            <label for="image" class="form-label">Image url</label>
+            <input type="url" name="image" class="form-control" id="image">
+        </div>
+
+        <div class="mb-3">
+            <label for="price" class="form-label">Price</label>
+            <input type="number" name="price" class="form-control" id="price" placeholder="Price">
+        </div>
+
+        <div class="mb-3 form-check">
+            <input type="checkbox" name="is_active" class="form-check-input" id="is-active">
+            <label class="form-check-label" for="is-active">Is Active</label>
+        </div>
+
+        
+        <div class="mb-3">
+            <label for="category" class="form-label">Category</label>
+            <select name="category" class="form-select" id="category">
+                {% for cat in categories %}
+                    <option value="{{ cat }}" >{{ cat }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        
+        <button type="submit" class="btn btn-primary">Create Listing</button>
+    </form>
+{% endblock %}

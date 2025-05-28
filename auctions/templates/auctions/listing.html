@@ -1,0 +1,62 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    {% if user.is_authenticated %}
+        {% if isListingInWatchList %}
+            <form action="{% url 'removeWatchList' listing.id %}" method="POST" class="mx-3">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Remove From Watchlist</button>
+
+            </form>
+        {% else %}
+            <form action="{% url 'addWatchList' listing.id %}" method="POST" class="mx-3">
+
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">Add to Watchlist</button>
+
+            </form>
+        {% endif %}
+    {% endif %}
+
+    <h2>{{ listing.title }}</h2>
+    <img src="{{ listing.imageUrl }}" alt="{{ listing.title }}" height="400px">
+    <p>{{ listing.description }}</p>
+    <p>Owner: {{ listing.owner }}</p>
+    <p>£{{ listing.price }}</p>
+
+   
+        <h2>Comment...</h2>
+            <br/>
+                {% if user.is_authenticated %}
+                    
+                    <form method="POST" action="{% url 'addComment' listing.id %}" class="max-w-md mx-auto bg-white p-4 rounded shadow">
+                        {% csrf_token %}
+                            <label for="newComment" class="block text-gray-700 text-sm font-semibold mb-3">Add a Comment</label>
+                            <br/>
+                            
+                            <textarea 
+                                name="newComment" 
+                                id="newComment" 
+                                rows="3"
+                                class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                                placeholder="Write your comment here..."
+                                required
+                                
+                            ></textarea>
+                            <br/>
+                            <button 
+                                type="submit"
+                                class="mt-3 btn btn-success text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+                            >
+                                Submit Comment
+                            </button>
+                    </form>
+                {% endif %}
+        <ul class="list-group"></ul>
+            {% for comment in allComments %}
+                <li class="list-group-item">{{ comment.message }}</li>
+                <br/>
+                <p>Posted By:<strong>{{ comment.author }}</strong></p>
+            {% endfor %}
+       </ul>
+{% endblock %}
