@@ -26,14 +26,13 @@ class Bid(models.Model):
 class Listing(models.Model):
     title = models.CharField(max_length=50)
     description = models.CharField(max_length=500)
-    imageUrl = models.URLField(max_length=1000, blank=False,null=True)
+    imageUrl = models.URLField(max_length=1000, blank=True,  default="http://127.0.0.1:8000/static/images/default.png")
     price = models.ForeignKey(Bid, on_delete=models.CASCADE, blank=True, null=True, related_name="bidPrice")
-    
-
     isActive = models.BooleanField(default=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="user")
     category = models.ForeignKey(Category,on_delete=models.CASCADE,blank=True,null=True, related_name="category")
     watchList = models.ManyToManyField(User, related_name="listingWatchlist", blank=True)
+    
     def __str__(self):
         return self.title
 

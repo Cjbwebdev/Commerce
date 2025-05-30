@@ -48,10 +48,34 @@ def index(request):
         "categories": allCategories,
     })
 
+def addBid(request,id):
+    newBid = request.POST['newBid']
+    listingData = Listing.objects.get(pk=id)
+    if int (newBid) > listingData.price.bid:
+        updateBid = Bid(user=request.user, bid=int(newBid))
+        updateBid.save()
+        listingData.price = updateBid
+        listingData.save() 
+        return render(request,"auctions/listing.html",{
+            "listing" : listingData,
+            "message": "Your Bid Was Successful.",
+            "update" : True
+        })
+    else:
+        return render(request,"auctions/listing.html",{
+            "listing" : listingData,
+            "message": "Your Bid Was Unsuccessful.",
+            "update" :False
+        })
+    
+
+
+
 def addComment(request,id):
     currentUser = request.user 
     listingData = Listing.objects.get(pk=id)
-    message = request.POST["newComment"]
+    message = request.POST.get("newComment", None)
+
 
     if message:
         newComment = Comment(
@@ -108,7 +132,7 @@ def createListing(request):
         categoryData = Category.objects.get(categoryName=category)
 
         # Create  a Bid Object
-        bid = Bid(bid=float(price), user=currentUser)
+        bid = Bid(bid=int(price), user=currentUser)
 
         bid.save()
 
